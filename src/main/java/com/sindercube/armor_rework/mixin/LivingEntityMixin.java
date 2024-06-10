@@ -30,7 +30,8 @@ public class LivingEntityMixin implements ArmorReworkLivingEntityAccess {
 
 	@Override
 	public void modifyBarrier(UnaryOperator<Float> function) {
-		getBarrierComponent().modifyValue(function);
+		var value = function.apply(getBarrierComponent().getValue());
+		getBarrierComponent().setValue(value);
 	}
 
 }

@@ -13,6 +13,7 @@ import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -31,10 +32,12 @@ public class InGameHudMixin {
 
 
 
+	@Unique
+	private static boolean BLINKING = false;
 
 	@Inject(method = "renderStatusBars", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Util;getMeasuringTimeMs()J"))
-	private void getBlinkingValue(DrawContext context, CallbackInfo ci, @Local boolean bl, @Share("blinking") LocalBooleanRef blinking) {
-		blinking.set(bl);
+	private void getBlinkingValue(DrawContext context, CallbackInfo ci, @Local boolean bl) {
+		BLINKING = bl;
 	}
 
 
@@ -46,8 +49,9 @@ public class InGameHudMixin {
 
 
 	@Inject(method = "renderArmor", at = @At("HEAD"), cancellable = true, locals = LocalCapture.CAPTURE_FAILEXCEPTION)
-	private static void renderArmorAndBarrier(DrawContext context, PlayerEntity player, int height, int j, int k, int width, CallbackInfo ci, @Share("blinking") LocalBooleanRef blinking) {
+	private static void renderArmorAndBarrier(DrawContext context, PlayerEntity player, int height, int j, int k, int width, CallbackInfo ci) {
 		ci.cancel();
+		boolean blinking = BLINKING;
 
 		ArmorType type = ArmorType.NORMAL;
 		int barrier = (int)BarrierAttachment.get(player).getValue();
@@ -61,17 +65,17 @@ public class InGameHudMixin {
 
 		while (armor >= 0) {
 			int x = width + armor * 8;
-			type.drawEmpty(context, x, y);
+			type.drawContainer(context, x, y, blinking);
 			armor--;
 		}
 
 		while (barrier >= 0) {
 			int x = width + barrier * 8;
 			if (half) {
-				type.drawHalf(context, x, y, blinking.get());
+				type.drawHalf(context, x, y, blinking);
 				half = false;
 			} else {
-				type.drawFull(context, x, y, blinking.get());
+				type.drawFull(context, x, y, blinking);
 			}
 			barrier--;
 		}

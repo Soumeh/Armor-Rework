@@ -8,7 +8,8 @@ public record ArmorType (
 		Identifier fullBlinkingTexture,
 		Identifier halfTexture,
 		Identifier halfBlinkingTexture,
-		Identifier containerTexture
+		Identifier containerTexture,
+		Identifier containerBlinkingTexture
 ) {
 
 	public static final ArmorType NORMAL = new ArmorType(
@@ -16,12 +17,15 @@ public record ArmorType (
 			new Identifier("hud/armor/full_blinking"),
 			new Identifier("hud/armor/half"),
 			new Identifier("hud/armor/half_blinking"),
-			new Identifier("hud/armor/container")
+			new Identifier("hud/armor/container"),
+			new Identifier("hud/armor/container_blinking")
 	);
 
 
-	public void drawEmpty(DrawContext context, int x, int y) {
-		context.drawGuiTexture(containerTexture, x, y, 9, 9);
+	public void drawContainer(DrawContext context, int x, int y, boolean blinking) {
+		var texture = containerTexture;
+		if (blinking) texture = containerBlinkingTexture;
+		context.drawGuiTexture(texture, x, y, 9, 9);
 	}
 
 	public void drawHalf(DrawContext context, int x, int y, boolean blinking) {

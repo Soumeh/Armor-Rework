@@ -23,11 +23,9 @@ public class BarrierAttachment {
 	public float getValue() {
 		return value;
 	}
+
 	public void setValue(float value) {
 		this.value = value;
-	}
-	public void modifyValue(UnaryOperator<Float> function) {
-		this.value = function.apply(value);
 	}
 
 

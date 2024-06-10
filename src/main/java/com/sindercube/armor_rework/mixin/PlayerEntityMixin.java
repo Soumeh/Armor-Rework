@@ -1,10 +1,12 @@
 package com.sindercube.armor_rework.mixin;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import com.sindercube.armor_rework.BarrierHandler;
 import com.sindercube.armor_rework.content.components.BarrierAttachment;
 import com.sindercube.armor_rework.asm.ArmorReworkLivingEntityAccess;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -42,10 +44,15 @@ public abstract class PlayerEntityMixin extends LivingEntity implements ArmorRew
 		}
 	}
 
+//	@Inject(method = "applyDamage", at = @At(value = "INVOKE", target = "Ljava/lang/Math;max(FF)F", shift = At.Shift.BEFORE, by = 1))
+//	private void takeBarrierDamageFirst(DamageSource source, float amount, CallbackInfo ci) {
+//		doSomething3();
+//	}
 
 	@ModifyVariable(method = "applyDamage", at = @At(value = "INVOKE", target = "Ljava/lang/Math;max(FF)F", shift = At.Shift.BEFORE, by = 1), ordinal = 1)
-	private float takeBarrierDamageFirst(float amount) {
-		return BarrierHandler.takeBarrierDamageFirst((PlayerEntity)(Object)this, amount);
+	private float takeBarrierDamageFirst(float damage, @Local(argsOnly = true) DamageSource source) {
+		System.out.println(damage);
+		return BarrierHandler.takeBarrierDamageFirst(this, source, damage);
 	}
 
 }
