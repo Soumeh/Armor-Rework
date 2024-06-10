@@ -1,41 +1,34 @@
 {
 	"schemaVersion": 1,
-	"id": "armor-rework",
 	"version": "${version}",
+
+	"id": "armor_rework",
 	"name": "Armor Rework",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "W.I.P.",
 	"authors": [
-		"Me!"
+		"Sindercube"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "https://github.com/Sindercube",
+		"sources": "https://github.com/Sindercube/Armor-Rework"
 	},
-	"license": "CC0-1.0",
-	"icon": "assets/armor-rework/icon.png",
-	"environment": "*",
+
 	"entrypoints": {
-		"main": [
-			"com.sindercube.armor_rework.ArmorRework"
-		],
-		"client": [
-			"com.sindercube.armor_rework.ArmorReworkClient"
-		]
+		"main": [ "com.sindercube.armor_rework.ArmorRework" ],
+		"client": [ "com.sindercube.armor_rework.ArmorReworkClient" ]
 	},
 	"mixins": [
-		"armor-rework.mixins.json",
-		{
-			"config": "armor-rework.client.mixins.json",
-			"environment": "client"
-		}
+		"armor_rework.mixins.json",
+		{ "config": "armor-rework.client.mixins.json", "environment": "client" }
 	],
-	"depends": {
-		"fabricloader": ">=0.15.11",
-		"minecraft": "~1.20.6",
-		"java": ">=21",
-		"fabric-api": "*"
+	"accessWidener": "armor_rework.accesswidener",
+	"custom": {
+		"loom:injected_interfaces": {
+			"net/minecraft/class_1309": ["com/sindercube/armor_rework/asm/ArmorReworkLivingEntityAccess"]
+		}
 	},
-	"suggests": {
-		"another-mod": "*"
+
+	"depends": {
+		"fabric-api": "*"
 	}
 }

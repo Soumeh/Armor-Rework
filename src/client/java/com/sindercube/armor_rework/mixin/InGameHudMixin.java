@@ -4,15 +4,14 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.sindercube.armor_rework.ArmorType;
-import com.sindercube.armor_rework.BarrierAttachment;
+import com.sindercube.armor_rework.api.ArmorType;
+import com.sindercube.armor_rework.content.components.BarrierAttachment;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -51,7 +50,7 @@ public class InGameHudMixin {
 		ci.cancel();
 
 		ArmorType type = ArmorType.NORMAL;
-		int barrier = BarrierAttachment.get(player).getBarrier();
+		int barrier = (int)BarrierAttachment.get(player).getValue();
 		boolean half = barrier % 2 == 1;
 
 		int armor = Math.min(player.getArmor()/2, 10)-1;
@@ -62,17 +61,17 @@ public class InGameHudMixin {
 
 		while (armor >= 0) {
 			int x = width + armor * 8;
-			type.renderEmpty(context, x, y);
+			type.drawEmpty(context, x, y);
 			armor--;
 		}
 
 		while (barrier >= 0) {
 			int x = width + barrier * 8;
 			if (half) {
-				type.renderHalf(context, x, y, blinking.get());
+				type.drawHalf(context, x, y, blinking.get());
 				half = false;
 			} else {
-				type.renderFull(context, x, y, blinking.get());
+				type.drawFull(context, x, y, blinking.get());
 			}
 			barrier--;
 		}
